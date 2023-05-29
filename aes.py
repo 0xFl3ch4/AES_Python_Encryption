@@ -30,7 +30,7 @@ def decrypt_file(key, input_file, output_file):
 operation = input("Enter 'E' for encryption or 'D' for decryption: ").upper()
 input_file = input("Enter the name of the input file: ")
 output_file = input("Enter the name of the output file: ")
-key = input("Enter the encryption key (16 bytes): ").encode()
+key = get_random_bytes(16)
 
 # Perform encryption or decryption based on user input
 if operation == 'E':
