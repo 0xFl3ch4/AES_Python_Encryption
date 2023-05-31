@@ -1,43 +1,52 @@
+import os
+from Crypto.Hash import SHA256
 from Crypto.Cipher import AES
-from Crypto.Util.Padding import pad, unpad
-from Crypto.Random import get_random_bytes
+from Crypto import Random
 
-def encrypt_file(key, input_file, output_file):
-    cipher = AES.new(key, AES.MODE_CBC)
-    iv = cipher.iv
+def encrypt(key, filename):
+    chunksize = 64*1024
+    outputFile = "enc_"+filename
+    filesize = str(os.path.getsize(filename)).zfill(16)
+    IV = Random.new().read(16)
 
-    with open(input_file, 'rb') as file:
-        plaintext = file.read()
+    encryptor = AES.new(key, AES.MODE_CBC, IV)
 
-    ciphertext = cipher.encrypt(pad(plaintext, AES.block_size))
+    with open(filename, 'rb') as infile:#rb means read in binary
+        with open(outputFile, 'wb') as outfile:#wb means write in the binary mode
+            outfile.write(filesize.encode('utf-8'))
+            outfile.write(IV)
 
-    with open(output_file, 'wb') as file:
-        file.write(iv)
-        file.write(ciphertext)
+            while True:
+                chunk = infile.read(chunksize)
 
-def decrypt_file(key, input_file, output_file):
-    with open(input_file, 'rb') as file:
-        iv = file.read(16)
-        ciphertext = file.read()
+                if len(chunk) == 0:
+                    break
+                elif len(chunk)%16 != 0:
+                    chunk += b' '*(16-(len(chunk)%16))
 
-    cipher = AES.new(key, AES.MODE_CBC, iv)
-    decrypted_data = unpad(cipher.decrypt(ciphertext), AES.block_size)
+                outfile.write(encryptor.encrypt(chunk))
 
-    with open(output_file, 'wb') as file:
-        file.write(decrypted_data)
 
-# Get user input
-operation = input("Enter 'E' for encryption or 'D' for decryption: ").upper()
-input_file = input("Enter the name of the input file: ")
-output_file = input("Enter the name of the output file: ")
-key = get_random_bytes(16)
+def getKey(password):
+    hasher = SHA256.new(password.encode('utf-8'))
+    return hasher.digest()
 
-# Perform encryption or decryption based on user input
-if operation == 'E':
-    encrypt_file(key, input_file, output_file)
-    print('File encrypted successfully.')
-elif operation == 'D':
-    decrypt_file(key, input_file, output_file)
-    print('File decrypted successfully.')
-else:
-    print('Invalid operation. Please choose either "E" or "D".')
+def Main():
+    choice = input("Would you like to (E)encrypt or (D)Decrypt ")
+
+    if choice == 'E':
+        filename = input("File to encrypt: ")
+        password = input("Password: ")
+        encrypt(getKey(password), filename)
+        print('Done.')
+    elif choice == 'D':
+        filename = input("File to decrypt: ")
+        password = input("Password: ")
+        decrypt(getKey(password),filename)
+        print("Done.")
+
+    else:
+        print("No option selected, closing...")
+
+
+Main()
