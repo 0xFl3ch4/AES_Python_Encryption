@@ -4,18 +4,25 @@ from Crypto.Cipher import AES
 from Crypto import Random
 
 def encrypt(key, filename):
+    #tamanho do bloco
     chunksize = 64*1024
     outputFile = "enc_"+filename
     filesize = str(os.path.getsize(filename)).zfill(16)
+
+    #vetor de inicialização
     IV = Random.new().read(16)
 
     encryptor = AES.new(key, AES.MODE_CBC, IV)
 
-    with open(filename, 'rb') as infile:#rb means read in binary
-        with open(outputFile, 'wb') as outfile:#wb means write in the binary mode
+    #abertura do ficheiro em modo binário
+    with open(filename, 'rb') as infile:
+        
+        #escreve o ficheiro the output em modo binário
+        with open(outputFile, 'wb') as outfile:
             outfile.write(filesize.encode('utf-8'))
             outfile.write(IV)
 
+            #encriptação
             while True:
                 chunk = infile.read(chunksize)
 
@@ -30,13 +37,18 @@ def decrypt(key, filename):
     chunksize = 64*1024
     outputFile = filename[11:]
 
+    #abertura do ficheiro em modo binário
     with open(filename, 'rb') as infile:
         filesize = int(infile.read(16))
-        IV = infile.read(16)
 
+        #vetor de inicialização
+        IV = infile.read(16)
         decryptor= AES.new(key, AES.MODE_CBC, IV)
 
+        #escreve o ficheiro the output em modo binário
         with open(outputFile, 'wb') as outfile:
+            
+            #desencriptação
             while True:
                 chunk = infile.read(chunksize)
 
@@ -52,21 +64,21 @@ def getKey(password):
     return hasher.digest()
 
 def Main():
-    choice = input("Would you like to (E)encrypt or (D)Decrypt ")
+    choice = input("(E)Encriptar ou (D)Desencriptar? ")
 
     if choice == 'E':
-        filename = input("File to encrypt: ")
-        password = input("Password: ")
+        filename = input("Nome ficheiro: ")
+        password = input("Palavra-passe: ")
         encrypt(getKey(password), filename)
-        print('Done.')
+        print('Operação efetuada com sucesso.')
     elif choice == 'D':
-        filename = input("File to decrypt: ")
-        password = input("Password: ")
+        filename = input("Nome ficheiro: ")
+        password = input("Palavra-passe: ")
         decrypt(getKey(password),filename)
-        print("Done.")
+        print("Operação efetuada com sucesso")
 
     else:
-        print("No option selected, closing...")
+        print("Nenhuma opção valida selecionada")
 
 
 Main()
