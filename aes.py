@@ -3,6 +3,10 @@ from Crypto.Hash import SHA256
 from Crypto.Cipher import AES
 from Crypto import Random
 
+def getKey(password):
+    hasher = SHA256.new(password.encode('utf-8'))
+    return hasher.digest()
+    
 def encrypt(key, filename):
     #tamanho do bloco
     chunksize = 64*1024
@@ -59,9 +63,7 @@ def decrypt(key, filename):
 
             outfile.truncate(filesize)
 
-def getKey(password):
-    hasher = SHA256.new(password.encode('utf-8'))
-    return hasher.digest()
+
 
 def Main():
     choice = input("(E)Encriptar ou (D)Desencriptar? ")
