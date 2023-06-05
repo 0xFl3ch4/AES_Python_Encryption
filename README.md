@@ -5,7 +5,7 @@ Encriptação de ficheiros com AES-CBC
 ## Descrição
 
 Este projeto foi desenvolvido por Ricardo Ferreira no âmbito da disciplina de Segurança Informática. 
-O objetivo do projeto é criar um programa em Python que permita a encriptação de arquivos utilizando o algoritmo de criptografia AES no modo CBC.
+O objetivo do projeto é criar um programa em Python que permita a encriptação e desencriptação de arquivos utilizando o algoritmo de criptografia AES no modo CBC.
 
 O algoritmo AES (Advanced Encryption Standard) é um algorimo de criptografia simétrica amplamente utilizado para proteger informações confidenciais. O modo CBC (Cipher Block Chaining) é um dos modos de operação do AES e adiciona uma camada extra de segurança à criptografia.
 
