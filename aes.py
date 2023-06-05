@@ -72,12 +72,10 @@ def Main():
         filename = input("Nome ficheiro: ")
         password = input("Palavra-passe: ")
         encrypt(getKey(password), filename)
-        print('Operação efetuada com sucesso.')
     elif choice == 'D':
         filename = input("Nome ficheiro: ")
         password = input("Palavra-passe: ")
         decrypt(getKey(password),filename)
-        print("Operação efetuada com sucesso")
 
     else:
         print("Nenhuma opção valida selecionada")
