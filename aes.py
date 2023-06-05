@@ -80,7 +80,7 @@ def Main():
         print("Operação efetuada com sucesso")
 
     else:
-        print("Nenhuma opção vlida selecionada")
+        print("Nenhuma opção valida selecionada")
 
 
 Main()
